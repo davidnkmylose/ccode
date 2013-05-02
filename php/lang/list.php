@@ -1,5 +1,5 @@
 <?php
 $hexnum = 256;
 
-$hexnum >> 1;
+echo $hexnum >> 1;
 ?>
