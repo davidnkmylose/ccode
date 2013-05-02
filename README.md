@@ -1,0 +1,4 @@
+ccode
+=====
+
+common code 
