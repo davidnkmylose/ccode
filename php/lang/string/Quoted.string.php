@@ -1,7 +1,7 @@
 <?php
 $list = array(
     'www',    
-    'baidu',    
+    'baidu',
     'com',    
     'www',    
     'google.',    
@@ -9,4 +9,4 @@ $list = array(
 );
 
 $str = implode('\t' , $list);
-?>
+echo $str;
