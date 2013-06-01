@@ -1,4 +1,4 @@
 <?php
-    echo 123123;
-
+    define('CCODE_PHP_ROOT','/Users/davidnk/project/ccode/php/');
+    echo CCODE_PHP_ROOT;
 
