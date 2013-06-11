@@ -2,15 +2,12 @@
 
 class Dir_Helper{
     
-    private $path = '/home/caopuwei/websit';
-    
     public function __construct(){
-    
     }
 
-    public function isDir(){
+    public function isDir( $path ){
         echo "run test \n";
-        var_dump(is_dir($this->path));
+        var_dump(is_dir($path));
     }
 
     public function openDir( $path ){
@@ -35,6 +32,6 @@ class Dir_Helper{
         echo filetype($file);
     }
 }
-
+$path = '/Users/davidnk/project/ccode/';
 $dirHandler = new Dir_Helper();
-$dirHandler->openDir("/home/caopuwei/websit/");
+$dirHandler->openDir($path);

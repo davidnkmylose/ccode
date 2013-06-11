@@ -1,0 +1,10 @@
+#6月1日
+    PHP_EOL代表不同平台换行符
+    window  \r\n
+    unix \n
+    mac \r
+    换行符替换的三种方案：
+        1. str_replace(array("\r","\n","\r\n") , "" , $string);
+        2. preg_replace("//s*/","",$str);
+        3. str_replace(PHP_EOL , "" , $string);
+
