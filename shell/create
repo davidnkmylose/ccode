@@ -1,0 +1,101 @@
+#! /bin/bash
+
+is_push=0
+while getopts ":m:p:h" opt
+do
+    case $opt in 
+        m ) 
+            module_string=$OPTARG
+            ;;
+        p ) 
+            is_push=1
+            ;;
+        h )
+            echo "-h help"
+            echo "-m module name"
+            echo "-p push dev env"
+            exit 0
+            ;;
+        ? ) 
+            echo "option is not null , please!"
+            echo "-h help"
+            echo "-m module name"
+            echo "-p push dev env"
+            exit 0 ;;
+    esac
+done
+
+if [ v"$module_string" == "v" ]; then
+    echo "input module name please"
+    echo "-h help"
+    echo "-m module name"
+    echo "-p push dev env"
+    exit
+fi
+
+module_name=`echo $module_string | tr [:upper:] [:lower:]`
+module_class=$module_name
+upper_first_module_name=`echo $module_name | sed 's/\b[a-z]/\U&/g'`
+
+root=`pwd`
+output="output"
+if [ -d "$output" ]; then
+    rm -rf $output
+fi
+
+mkdir $output
+
+cp -r target/* $output
+
+#create controller
+sed -i "s/{#MOUDULE_NAME}/${upper_first_module_name}/g" "output/controller/MODULE_NAMEController.php"
+sed -i "s/{#MOUDULE_NAME}/${upper_first_module_name}/g" "output/controller/MODULE_NAMEApiController.php"
+mv "output/controller/MODULE_NAMEController.php"  "output/controller/${upper_first_module_name}Controller.php"
+mv "output/controller/MODULE_NAMEApiController.php"  "output/controller/${upper_first_module_name}ApiController.php"
+rm -rf output/controller/MODULE_NAMEController.php
+rm -rf output/controller/MODULE_NAMEApiController.php
+echo "create controller controller/${upper_first_module_name}Controller.php"
+
+#create modules
+sed -i "s/{#MOUDULE_NAME}/${upper_first_module_name}/g" "output/modules/module_name/Demo.php"
+mv "output/modules/module_name/" "output/modules/${module_class}"
+echo "create modules ${module_name}"
+
+#create page
+sed -i "s/{#MOUDULE_NAME}/${upper_first_module_name}/g" "output/page/module_name/Demo.php"
+mv "output/page/module_name/" "output/page/${module_class}"
+echo "create page ${module_name}"
+
+echo "create end;"
+echo "info : module_name : ${module_name}"
+
+if [ $is_push == 0 ]; then
+    exit 0
+fi
+
+target_controller_dir="../../controller/"
+target_page_dir="../../page/"
+target_modules_dir="../../modules/"
+
+#push controller
+if [ ! -f "${target_controller_dir}/${upper_first_module_name}Controller.php" ]; then
+    echo "${target_controller_dir}/${upper_first_module_name}Controller.php push"
+    cp output/controller/${upper_first_module_name}Controller.php "${target_controller_dir}/"
+fi
+
+if [ ! -f "${target_controller_dir}/${upper_first_module_name}ApiController.php" ]; then
+    echo "${target_controller_dir}/${upper_first_module_name}ApiController.php push"
+    cp output/controller/${upper_first_module_name}ApiController.php "${target_controller_dir}/"
+fi
+
+#push page
+if [ ! -d "${target_page_dir}/${module_class}" ]; then
+    echo "${target_page_dir}/${module_class} push"
+    cp -r output/page/${module_class} ${target_page_dir}/
+fi
+
+#push modules
+if [ ! -d "${target_modules_dir}/${module_class}" ]; then
+    echo "${target_modules_dir}/${module_class} push"
+    cp -r output/modules/${module_class} ${target_modules_dir}/
+fi
